@@ -1,0 +1,7 @@
+{
+  "extends": "recommended-jenkinsfile",
+  "rules": {
+    "convention.CompileStatic": "off",
+    "formatting.LineLength": 100
+  }
+}

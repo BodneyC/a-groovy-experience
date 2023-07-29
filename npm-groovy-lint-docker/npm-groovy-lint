@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# NOTE: This does make the assumption that your PWD doesn't exist/isn't
+#  important within the container itself...
+# Maybe not the safest assumption but the tool reports absolute paths and this
+#  doesn't seem (at a first glance) to be configurable. I'd rather take the
+#  risk and get a pipe-able output.
+
+# To run without the config file in this repo (../.groovylintrc.json), pass:
+#   -c /dev/null
+
+docker run --rm -t \
+  -u "$(id -u):$(id -g)" \
+  -w "$PWD" -v "$PWD:$PWD" \
+  nvuillam/npm-groovy-lint \
+  ${1:+"$@"}

@@ -1,0 +1,57 @@
+---
+## General ####################################################################
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+  - id: mixed-line-ending
+  - id: check-merge-conflict
+  - id: check-shebang-scripts-are-executable
+## Groovy #####################################################################
+- repo: local
+  hooks:
+  # This uses the "system" option but `npm-groovy-lint`, is the script in:
+  #   ./npm-groovy-lint-docker/npm-groovy-lint
+  - id: npm-groovy-lint-system-bin
+    name: lint and fix groovy code
+    entry: npm-groovy-lint --fix
+    language: system
+    types: [groovy]
+    # Solely to get it to commit...
+    exclude: example-pipelines/unformatted.groovy
+  - id: npm-groovy-lint-system-bin
+    name: format groovy code
+    entry: npm-groovy-lint --format
+    language: system
+    types: [groovy]
+    # Solely to get it to commit...
+    exclude: example-pipelines/unformatted.groovy
+# This works just fine but installation has arch issues and require Node and
+#  Java, and it's name isn't consistent with the rest, not important
+# - repo: https://github.com/nvuillam/npm-groovy-lint
+#   rev: v11.1.1
+#   hooks:
+#   - id: npm-groovy-lint
+## Yaml ######################################################################
+- repo: https://github.com/adrienverge/yamllint.git
+  rev: v1.32.0
+  hooks:
+  - id: yamllint
+    args: [--format, parsable, --strict]
+- repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+  rev: 0.2.3
+  hooks:
+  - id: yamlfmt
+    name: format yaml files
+    args: [--mapping, '2', --sequence, '2', --offset, '0', --colons]
+## Markdown ###################################################################
+- repo: local
+  hooks:
+  - id: markdownlint-cli
+    name: lint markdown
+    entry: ghcr.io/igorshubovych/markdownlint-cli:v0.35.0
+    language: docker_image
+    files: \.(md|mdown|markdown)$
