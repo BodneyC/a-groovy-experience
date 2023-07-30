@@ -1,0 +1,36 @@
+# vim: set ft=config tw=80 :
+
+external-sources=true
+
+enable=check-unassigned-uppercase
+
+#      Rule: Declare and assign separately to avoid masking return values.
+# Rationale: This is one I think it useful for `local` initializations but
+#             less so with `export`ed initializations as these tend to be
+#             simpler commands where we don't care about the return values -
+#             it's a shame we can't split them, arguably this is my laziness
+disable=SC2155
+
+#      Rule: Var appears unused. Verify use (or export if used externally)
+# Rationale: I often create variables which I will likely want at some point
+#             but not necessarily now. Obviously in excess they can be a real
+#             smell, but not here.
+disable=SC2034
+
+# Additional information:
+#
+# When `source`ing other files, you often may variablize the path, e.g.:
+#      source "$my_dir/my-script.sh"
+#  used to be that Shellcheck would complain that it was unable to follow a
+#  non-constant source for these, in other words it can't be informed of the
+#  vars and functions defined in those files if it can't find the file.
+# Current versions of shellcheck will replace any variable before the first
+#  slash with a `.` and then attempt to resolve, so the above would be replaced
+#  by:
+#      source "./my-script.sh"
+#  which might be correct for your purposes (and often is). Despite this handy
+#  feature, bash-language-server still seems to rely on Shellcheck directives
+#  for this, e.g.:
+#      # shellcheck source=./my-script.sh
+#      source "$my_dir/my-script.sh"
+#  which is why you see my do that a few times, solely for editor support.
