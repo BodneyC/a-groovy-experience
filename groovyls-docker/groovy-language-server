@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# NOTE: This does make the assumption that your PWD doesn't exist/isn't
+#  important within the container itself...
+# Maybe not the safest assumption but the tool reports absolute paths and this
+#  doesn't seem (at a first glance) to be configurable. I'd rather take the
+#  risk and get a pipe-able output.
+
+# With groovy-language-server you will often need to include library JARs (even
+#  if you're just referring to files in the same project...) - with a local
+#  installation, you can just point your LSP configuration to the new JARs but
+#  Docker can't reach your local JARs - the idea is that you hardlink or copy
+#  those JARs to this directory in your local and the volume mount will put them
+#  in the same place - this way your local/docker config can be the same.
+
+docker run --rm -i \
+  -u "$(id -u):$(id -g)" \
+  -v "$HOME/.groovy-language-server-cp-jars:$HOME/.groovy-language-server-cp-jars" \
+  groovy-language-server:latest \
+  ${1:+"$@"}
